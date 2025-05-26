@@ -90,8 +90,8 @@ app.add_middleware(
 
 # SerpAPI keys
 SERPAPI_KEYS = [
-    "736c0c4229125891db11c1f0cdfe9485dfc96115dc53237931290a001a96c7ea",
-    "29f2ca31b18eb58a4a3d9bbff7e750e4f4ade20c0db8cef364363aa83543ec61",
+    "",
+    "",
 ]
 
 # Supported languages and their codes for translation

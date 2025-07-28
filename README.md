@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./assets/xendrix-logo.png" alt="Xendrix Logo" width="180"/>
+  <img src="frontend/public/logo.png" alt="Xendrix Logo" width="180"/>
 </p>
 
 <h1 align="center">Xendrix AI Assistant</h1>

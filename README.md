@@ -2,56 +2,207 @@
   <img src="frontend/public/logo.png" alt="Xendrix Logo" width="180"/>
 </p>
 
-<h1 align="center">Xendrix AI Assistant</h1>
+# Xendrix AI Assistant
 
-<p align="center">
-  An intelligent, multimodal AI assistant built using <strong>FastAPI</strong> (backend) and <strong>Next.js</strong> (frontend). 
-  Xendrix combines conversational AI, document analysis, multilingual capabilities, data visualization, and image generation to deliver a powerful interactive experience.
-</p>
+An intelligent, multimodal AI assistant with a FastAPI backend and a Next.js frontend. Xendrix combines conversational AI, retrieval-augmented document analysis, multilingual support, data visualization, and image generation to provide an interactive assistant experience.
+
+This README summarizes the project structure, features, installation steps, configuration, and how to run the app based on the repository code.
 
 ---
 
-## Features
+## Key Features
 
-### Chat Interface
-- Context-aware conversation with persistent history
-- Multilingual support (English, Hindi, Tamil, Telugu, French, and more)
-- AI introduction detection across languages
-- Mathematical rendering using KaTeX
-- Code highlighting via Prism.js
-- Typing animation for AI responses
-
-### File Upload + Retrieval-Augmented Generation (RAG)
-- Supports `.pdf`, `.docx`, and `.csv` uploads
-- Text is chunked, embedded using `all-MiniLM-L6-v2`, and indexed with FAISS
-- AI answers based on contextually retrieved document content
-
-### Data Visualization
-- Parses structured/tabular data from chat or uploaded files
-- Generates bar, pie, line, and scatter plots
-- Backend rendering with `matplotlib`, frontend with Recharts
-
-### Image Generation
-- Generates images based on user prompts
-- Uses Stable Diffusion v1.5 with DPM++ 2M Karras scheduler
-- Compatible with CPU and CUDA-enabled GPUs
-
-### Additional Smart Features
-- Weather queries using Weatherstack API
-- Web search with SerpAPI (key rotation support)
-- Math problem solving via SymPy
-- Multilingual name and entity recognition
+- Conversation chat interface with persistent chat history
+- Multilingual support (English, Hindi, Tamil, Telugu, French, Spanish, German, Japanese, Chinese, Russian, Arabic, Portuguese)
+- Introduction/name detection across multiple languages
+- File upload + Retrieval-Augmented Generation (RAG) for `.pdf`, `.docx`, and `.csv`
+  - Text chunking, embedding (SentenceTransformers `all-MiniLM-L6-v2`) and FAISS indexing
+- Data visualization: backend-rendered charts (matplotlib) + frontend charts (Recharts)
+- Image generation using Stable Diffusion v1.5 (CPU/CUDA compatible)
+- Math problem solving via SymPy and KaTeX rendering support in the frontend
+- Code highlighting (Prism.js), typing animation for AI responses
+- Utility features: Weather queries (Weatherstack), web search (SerpAPI with key rotation), translations (deep-translator)
 
 ---
 
 ## Tech Stack
 
-| Layer        | Technologies & Libraries |
-|--------------|---------------------------|
-| **Backend**  | FastAPI, FAISS, SentenceTransformers, Matplotlib, SymPy, Ollama (Mistral), Stable Diffusion |
-| **Frontend** | Next.js (React), Recharts, Prism.js, KaTeX |
-| **Models**   | `all-MiniLM-L6-v2`, `Stable Diffusion v1.5`, `MistralAI`, `Gemma` |
-| **APIs**     | Weatherstack, SerpAPI, Deep Translator |
-| **Storage**  | JSON files, Pickle, FAISS vector store |
+- Backend: FastAPI, Python
+  - Core libs: sentence-transformers, faiss, matplotlib, sympy, pandas, PyPDF2, python-docx
+  - Models / Engines: `all-MiniLM-L6-v2` (embeddings), Stable Diffusion v1.5 (image gen), Ollama-hosted models (Mistral/Gemma) for chat (configurable)
+  - Storage: JSON files (chats.json), Pickle, FAISS vector store
+- Frontend: Next.js (React), Recharts, Prism.js, KaTeX
+- Other: SerpAPI, Weatherstack, Deep Translator
+- Containerization: optional Docker workflow (Dockerfile not guaranteed)
+
+---
+
+## Repo layout (high level)
+
+- frontend/ — Next.js application (UI, chat, upload UI, visualization)
+- backend/ — FastAPI service (chat endpoints, file ingestion, RAG, image generation)
+- chats.json — persistent chat history (written by backend)
+- vector_db/ — FAISS indices and pickled metadata (created at runtime)
+- examples/ (may include sample inputs)
+
+---
+
+## Installation (development)
+
+Prerequisites:
+- Python 3.9+ (recommended)
+- Node.js 16+ / pnpm or npm
+- (Optional) CUDA-enabled GPU + NVIDIA drivers for faster Stable Diffusion
+- FFmpeg (depending on any media processing in future)
+
+1. Clone the repo
+   ```
+   git clone https://github.com/Kishore-1803/XendrixAI.git
+   cd XendrixAI
+   ```
+
+2. Backend: create and activate a virtual environment, install dependencies
+   ```
+   cd backend
+   python -m venv .venv
+   # macOS / Linux
+   source .venv/bin/activate
+   # Windows
+   .venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+3. Frontend: install dependencies and start dev server
+   ```
+   cd ../frontend
+   npm install
+   npm run dev
+   # or
+   # pnpm install && pnpm dev
+   ```
+
+---
+
+## Configuration / Environment Variables
+
+Add a `.env` or set environment variables for the following (examples):
+
+- SERPAPI_KEY — SerpAPI key (for web search)
+- WEATHERSTACK_KEY — Weatherstack API key (for weather queries)
+- OLLAMA_HOST — (if using a local/remote Ollama service)
+- VECTOR_DB_DIR — directory for FAISS indices (defaults to `vector_db`)
+- CHAT_HISTORY_FILE — path to chat history JSON (defaults to `chats.json`)
+- Any other API keys (Deep Translator if required by setup)
+
+Note: Backend code uses several constants (e.g., TOP_K_RESULTS, CHUNK_SIZE) that can be adjusted in backend/app.py.
+
+---
+
+## Running the services
+
+Backend (FastAPI)
+```
+cd backend
+# recommended: from virtualenv with dependencies installed
+uvicorn app:app --host 0.0.0.0 --port 8000 --reload
+```
+
+Frontend (Next.js)
+```
+cd frontend
+npm run dev
+# Open http://localhost:3000
+```
+
+The frontend expects the backend API at http://localhost:8000 by default (fetch calls to endpoints such as /chats, /documents, /languages, /upload_file, /new_chat).
+
+---
+
+## Important Endpoints (backend)
+
+- GET  /chats           — list chat histories
+- POST /new_chat?document_id=<id>&language=<lang> — create a new chat optionally tied to an uploaded document
+- GET  /documents       — list uploaded documents
+- POST /upload_file     — upload files (.pdf, .docx, .csv) for ingestion and indexing
+- GET  /languages       — supported languages list
+- Additional endpoints: image generation, visualization generation, search/RAG endpoints
+
+Refer to backend/app.py for exact route signatures, expected request bodies and response payloads.
+
+---
+
+## File Upload & RAG flow
+
+- Files accepted: .pdf, .docx, .csv
+- Text is extracted then chunked (CHUNK_SIZE, CHUNK_OVERLAP in backend)
+- Embeddings are computed with SentenceTransformers (e.g., `all-MiniLM-L6-v2`)
+- FAISS index stores embeddings and metadata; query-time retrieval supplies context to the chat model
+
+---
+
+## Image Generation
+
+- Stable Diffusion v1.5 pipeline is loaded at backend startup.
+- The app uses a DPM++ style scheduler for higher-quality results.
+- If CUDA is available and torch detects it, the model is moved to GPU automatically for faster generation. Otherwise CPU fallback is used (much slower).
+
+---
+
+## Data Visualization
+
+- Backend can render matplotlib charts (bar, pie, line, scatter) and return them to the frontend.
+- Frontend provides interactive visualizations using Recharts for client-side rendering.
+
+---
+
+## Development
+
+- Linting, tests and type checks can be added to the repo. Suggested tools:
+  - flake8 / black / isort for Python
+  - eslint / prettier for frontend
+  - pytest for tests
+- Use feature branches, open pull requests and run CI prior to merging.
+
+---
+
+## Troubleshooting / Tips
+
+- If the frontend shows fetch errors, ensure the backend is running on port 8000 and CORS is configured to allow http://localhost:3000.
+- For large PDFs or many documents, FAISS index building can be memory intensive. Consider batching or increasing system resources.
+- Stable Diffusion on CPU can be very slow and memory heavy — use GPU if available.
+- Keep API keys out of version control (.env + .gitignore).
+
+---
+
+## Roadmap / Possible Improvements
+
+- Add notebook demos (Jupyter / Colab) for RAG and embedding flow
+- Add automated tests for file ingestion and RAG queries
+- Add token limits and cost-control for third-party model usage
+- Provide Docker Compose for one-command local deployment (frontend + backend + optional Ollama)
+- Add model fine-tuning or instruction-tuning recipes
+
+---
+
+## Contributing
+
+Contributions welcome. Suggested workflow:
+- Fork the repo, create feature branches from `main`: `git checkout -b feat/your-feature`
+- Add tests for new functionality
+- Open a pull request describing your changes
+
+Please include a CONTRIBUTING.md if you plan to accept outside contributions.
+
+---
+
+## License
+
+Please add a LICENSE file to the repository. No license is included by default; consider MIT or Apache-2.0 if you want a permissive open-source license.
+
+---
+
+## Acknowledgements
+
+- SentenceTransformers, FAISS, Hugging Face stable-diffusion models, Next.js, FastAPI and the open-source community for libraries and resources used here.
 
 ---

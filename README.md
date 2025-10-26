@@ -174,16 +174,6 @@ Refer to backend/app.py for exact route signatures, expected request bodies and 
 
 ---
 
-## Roadmap / Possible Improvements
-
-- Add notebook demos (Jupyter / Colab) for RAG and embedding flow
-- Add automated tests for file ingestion and RAG queries
-- Add token limits and cost-control for third-party model usage
-- Provide Docker Compose for one-command local deployment (frontend + backend + optional Ollama)
-- Add model fine-tuning or instruction-tuning recipes
-
----
-
 ## Contributing
 
 Contributions welcome. Suggested workflow:
@@ -192,17 +182,5 @@ Contributions welcome. Suggested workflow:
 - Open a pull request describing your changes
 
 Please include a CONTRIBUTING.md if you plan to accept outside contributions.
-
----
-
-## License
-
-Please add a LICENSE file to the repository. No license is included by default; consider MIT or Apache-2.0 if you want a permissive open-source license.
-
----
-
-## Acknowledgements
-
-- SentenceTransformers, FAISS, Hugging Face stable-diffusion models, Next.js, FastAPI and the open-source community for libraries and resources used here.
 
 ---

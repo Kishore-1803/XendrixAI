@@ -2,185 +2,265 @@
   <img src="frontend/public/logo.png" alt="Xendrix Logo" width="180"/>
 </p>
 
-# Xendrix AI Assistant
+<h1 align="center">Xendrix AI Assistant</h1>
 
-An intelligent, multimodal AI assistant with a FastAPI backend and a Next.js frontend. Xendrix combines conversational AI, retrieval-augmented document analysis, multilingual support, data visualization, and image generation to provide an interactive assistant experience.
+<p align="center">
+  <strong>An intelligent, multimodal AI assistant with chat, RAG, visualization, and image generation.</strong>
+</p>
 
-This README summarizes the project structure, features, installation steps, configuration, and how to run the app based on the repository code.
-
----
-
-## Key Features
-
-- Conversation chat interface with persistent chat history
-- Multilingual support (English, Hindi, Tamil, Telugu, French, Spanish, German, Japanese, Chinese, Russian, Arabic, Portuguese)
-- Introduction/name detection across multiple languages
-- File upload + Retrieval-Augmented Generation (RAG) for `.pdf`, `.docx`, and `.csv`
-  - Text chunking, embedding (SentenceTransformers `all-MiniLM-L6-v2`) and FAISS indexing
-- Data visualization: backend-rendered charts (matplotlib) + frontend charts (Recharts)
-- Image generation using Stable Diffusion v1.5 (CPU/CUDA compatible)
-- Math problem solving via SymPy and KaTeX rendering support in the frontend
-- Code highlighting (Prism.js), typing animation for AI responses
-- Utility features: Weather queries (Weatherstack), web search (SerpAPI with key rotation), translations (deep-translator)
+<p align="center">
+  <a href="#"><img src="https://img.shields.io/badge/Python-3.9%2B-blue.svg"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/FastAPI-Backend-green.svg"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/Next.js-Frontend-black.svg"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/AI-Multimodal-purple.svg"/></a>
+  <a href="LICENSE"><img src="https://img.shields.io/badge/License-MIT-yellow.svg"/></a>
+  <a href="#"><img src="https://img.shields.io/badge/Status-Active-success.svg"/></a>
+</p>
 
 ---
 
-## Tech Stack
+## 📌 Overview
 
-- Backend: FastAPI, Python
-  - Core libs: sentence-transformers, faiss, matplotlib, sympy, pandas, PyPDF2, python-docx
-  - Models / Engines: `all-MiniLM-L6-v2` (embeddings), Stable Diffusion v1.5 (image gen), Ollama-hosted models (Mistral/Gemma) for chat (configurable)
-  - Storage: JSON files (chats.json), Pickle, FAISS vector store
-- Frontend: Next.js (React), Recharts, Prism.js, KaTeX
-- Other: SerpAPI, Weatherstack, Deep Translator
-- Containerization: optional Docker workflow (Dockerfile not guaranteed)
+**Xendrix** is a **multimodal AI assistant** combining conversational AI, Retrieval-Augmented Generation (RAG), multilingual understanding, data visualization, mathematical reasoning, and image generation.
+
+It uses a **FastAPI backend** and a **Next.js frontend**, making it suitable for **research, productivity tools, and real-world AI assistant deployments**.
 
 ---
 
-## Repo layout (high level)
+## ✨ Key Features
 
-- frontend/ — Next.js application (UI, chat, upload UI, visualization)
-- backend/ — FastAPI service (chat endpoints, file ingestion, RAG, image generation)
-- chats.json — persistent chat history (written by backend)
-- vector_db/ — FAISS indices and pickled metadata (created at runtime)
-- examples/ (may include sample inputs)
-
----
-
-## Installation (development)
-
-Prerequisites:
-- Python 3.9+ (recommended)
-- Node.js 16+ / pnpm or npm
-- (Optional) CUDA-enabled GPU + NVIDIA drivers for faster Stable Diffusion
-- FFmpeg (depending on any media processing in future)
-
-1. Clone the repo
-   ```
-   git clone https://github.com/Kishore-1803/XendrixAI.git
-   cd XendrixAI
-   ```
-
-2. Backend: create and activate a virtual environment, install dependencies
-   ```
-   cd backend
-   python -m venv .venv
-   # macOS / Linux
-   source .venv/bin/activate
-   # Windows
-   .venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
-
-3. Frontend: install dependencies and start dev server
-   ```
-   cd ../frontend
-   npm install
-   npm run dev
-   # or
-   # pnpm install && pnpm dev
-   ```
+- 💬 Conversational chat with **persistent chat history**
+- 🌍 Multilingual support  
+  *(English, Hindi, Tamil, Telugu, French, Spanish, German, Japanese, Chinese, Russian, Arabic, Portuguese)*
+- 🧠 Introduction & name detection across languages
+- 📄 File upload + **Retrieval-Augmented Generation (RAG)**
+  - Supported formats: `.pdf`, `.docx`, `.csv`
+  - Chunking, embeddings (`all-MiniLM-L6-v2`), FAISS indexing
+- 📊 Data visualization
+  - Backend-rendered charts (Matplotlib)
+  - Frontend interactive charts (Recharts)
+- 🎨 Image generation using **Stable Diffusion v1.5** (CPU / CUDA)
+- ➗ Math problem solving using **SymPy** with KaTeX rendering
+- 💻 Code highlighting (Prism.js) + typing animation
+- 🌦️ Utility integrations
+  - Weather queries (Weatherstack)
+  - Web search (SerpAPI with key rotation)
+  - Translations (Deep Translator)
 
 ---
 
-## Configuration / Environment Variables
+## 🛠️ Tech Stack
 
-Add a `.env` or set environment variables for the following (examples):
+### Backend
+- **Framework**: FastAPI (Python)
+- **Core Libraries**:
+  - sentence-transformers
+  - FAISS
+  - matplotlib
+  - sympy
+  - pandas
+  - PyPDF2
+  - python-docx
+- **Models / Engines**:
+  - Embeddings: `all-MiniLM-L6-v2`
+  - Image Generation: Stable Diffusion v1.5
+  - Chat Models: Ollama-hosted models (Mistral / Gemma – configurable)
+- **Storage**:
+  - JSON (chat history)
+  - Pickle
+  - FAISS vector store
 
-- SERPAPI_KEY — SerpAPI key (for web search)
-- WEATHERSTACK_KEY — Weatherstack API key (for weather queries)
-- OLLAMA_HOST — (if using a local/remote Ollama service)
-- VECTOR_DB_DIR — directory for FAISS indices (defaults to `vector_db`)
-- CHAT_HISTORY_FILE — path to chat history JSON (defaults to `chats.json`)
-- Any other API keys (Deep Translator if required by setup)
+### Frontend
+- **Framework**: Next.js (React)
+- **Visualization**: Recharts
+- **Rendering**: Prism.js, KaTeX
 
-Note: Backend code uses several constants (e.g., TOP_K_RESULTS, CHUNK_SIZE) that can be adjusted in backend/app.py.
+### Other
+- SerpAPI
+- Weatherstack
+- Deep Translator
+- Optional Docker workflow
 
 ---
 
-## Running the services
+## 📂 Project Structure
 
-Backend (FastAPI)
+```text
+XendrixAI/
+├── frontend/                 # Next.js frontend (UI, chat, visualizations)
+├── backend/                  # FastAPI backend (AI logic, RAG, image gen)
+├── chats.json                # Persistent chat history (auto-generated)
+├── vector_db/                # FAISS indices & metadata (runtime)
+├── examples/                 # Sample inputs (if present)
+├── LICENSE                   # MIT License
+└── README.md                 # Project documentation
+````
+
+---
+
+## 🚀 Installation (Development)
+
+### Prerequisites
+
+* Python **3.9+**
+* Node.js **16+**
+* npm or pnpm
+* *(Optional)* CUDA-enabled GPU for faster image generation
+
+---
+
+### 1️⃣ Clone the Repository
+
+```bash
+git clone https://github.com/Kishore-1803/XendrixAI.git
+cd XendrixAI
 ```
+
+---
+
+### 2️⃣ Backend Setup
+
+```bash
 cd backend
-# recommended: from virtualenv with dependencies installed
+python -m venv .venv
+
+# macOS / Linux
+source .venv/bin/activate
+
+# Windows
+.venv\Scripts\activate
+
+pip install -r requirements.txt
+```
+
+---
+
+### 3️⃣ Frontend Setup
+
+```bash
+cd ../frontend
+npm install
+npm run dev
+# or: pnpm install && pnpm dev
+```
+
+---
+
+## ⚙️ Configuration (Environment Variables)
+
+Create a `.env` file or export variables:
+
+```env
+SERPAPI_KEY=your_serpapi_key
+WEATHERSTACK_KEY=your_weatherstack_key
+OLLAMA_HOST=http://localhost:11434
+VECTOR_DB_DIR=vector_db
+CHAT_HISTORY_FILE=chats.json
+```
+
+Backend constants such as `CHUNK_SIZE`, `TOP_K_RESULTS`, etc., can be adjusted in `backend/app.py`.
+
+---
+
+## ▶️ Running the Application
+
+### Backend
+
+```bash
+cd backend
 uvicorn app:app --host 0.0.0.0 --port 8000 --reload
 ```
 
-Frontend (Next.js)
-```
+### Frontend
+
+```bash
 cd frontend
 npm run dev
-# Open http://localhost:3000
 ```
 
-The frontend expects the backend API at http://localhost:8000 by default (fetch calls to endpoints such as /chats, /documents, /languages, /upload_file, /new_chat).
+📍 Frontend: [http://localhost:3000](http://localhost:3000)
+📍 Backend API: [http://localhost:8000](http://localhost:8000)
 
 ---
 
-## Important Endpoints (backend)
+## 🔌 Important Backend Endpoints
 
-- GET  /chats           — list chat histories
-- POST /new_chat?document_id=<id>&language=<lang> — create a new chat optionally tied to an uploaded document
-- GET  /documents       — list uploaded documents
-- POST /upload_file     — upload files (.pdf, .docx, .csv) for ingestion and indexing
-- GET  /languages       — supported languages list
-- Additional endpoints: image generation, visualization generation, search/RAG endpoints
+* `GET  /chats` — List chat histories
+* `POST /new_chat` — Create a new chat session
+* `GET  /documents` — List uploaded documents
+* `POST /upload_file` — Upload files for RAG
+* `GET  /languages` — Supported languages
+* Additional endpoints for image generation, visualization, and search
 
-Refer to backend/app.py for exact route signatures, expected request bodies and response payloads.
-
----
-
-## File Upload & RAG flow
-
-- Files accepted: .pdf, .docx, .csv
-- Text is extracted then chunked (CHUNK_SIZE, CHUNK_OVERLAP in backend)
-- Embeddings are computed with SentenceTransformers (e.g., `all-MiniLM-L6-v2`)
-- FAISS index stores embeddings and metadata; query-time retrieval supplies context to the chat model
+Refer to `backend/app.py` for full details.
 
 ---
 
-## Image Generation
+## 📄 File Upload & RAG Pipeline
 
-- Stable Diffusion v1.5 pipeline is loaded at backend startup.
-- The app uses a DPM++ style scheduler for higher-quality results.
-- If CUDA is available and torch detects it, the model is moved to GPU automatically for faster generation. Otherwise CPU fallback is used (much slower).
-
----
-
-## Data Visualization
-
-- Backend can render matplotlib charts (bar, pie, line, scatter) and return them to the frontend.
-- Frontend provides interactive visualizations using Recharts for client-side rendering.
+1. File ingestion (`.pdf`, `.docx`, `.csv`)
+2. Text extraction and chunking
+3. Embedding generation (`SentenceTransformers`)
+4. FAISS indexing
+5. Context retrieval at query time
 
 ---
 
-## Development
+## 🎨 Image Generation
 
-- Linting, tests and type checks can be added to the repo. Suggested tools:
-  - flake8 / black / isort for Python
-  - eslint / prettier for frontend
-  - pytest for tests
-- Use feature branches, open pull requests and run CI prior to merging.
+* Uses **Stable Diffusion v1.5**
+* Automatically switches to **GPU** if CUDA is available
+* CPU fallback supported (slower)
 
 ---
 
-## Troubleshooting / Tips
+## 📊 Data Visualization
 
-- If the frontend shows fetch errors, ensure the backend is running on port 8000 and CORS is configured to allow http://localhost:3000.
-- For large PDFs or many documents, FAISS index building can be memory intensive. Consider batching or increasing system resources.
-- Stable Diffusion on CPU can be very slow and memory heavy — use GPU if available.
-- Keep API keys out of version control (.env + .gitignore).
+* Backend generates Matplotlib plots
+* Frontend renders interactive charts via Recharts
 
 ---
 
-## Contributing
+## 🧪 Development Notes
 
-Contributions welcome. Suggested workflow:
-- Fork the repo, create feature branches from `main`: `git checkout -b feat/your-feature`
-- Add tests for new functionality
-- Open a pull request describing your changes
+Recommended tooling:
 
-Please include a CONTRIBUTING.md if you plan to accept outside contributions.
+* Python: `black`, `flake8`, `isort`, `pytest`
+* Frontend: `eslint`, `prettier`
 
 ---
+
+## 🛠️ Troubleshooting
+
+* Ensure backend runs on port **8000**
+* Enable CORS for `http://localhost:3000`
+* Large PDFs may require higher memory
+* Keep `.env` files out of version control
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!
+
+1. Fork the repository
+2. Create a feature branch
+
+   ```bash
+   git checkout -b feat/your-feature
+   ```
+3. Commit changes and open a Pull Request
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**.
+See the [LICENSE](LICENSE) file for details.
+
+---
+
+⭐ **If you like this project, consider starring the repository!** ⭐
+
+Just tell me 🚀
+```
